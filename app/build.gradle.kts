@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.cimly_mobile_app"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.cimly_mobile_app"
