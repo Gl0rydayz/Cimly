@@ -5,4 +5,7 @@
 
     <color name="btn_orange">#E75E2A</color>
     <color name="btn_blue">#3583F0</color>
+
+    <color name="status_nav_bar_color">#F8F6F6</color>
+    <color name="dark_grey">#4A4A4A</color>
 </resources>

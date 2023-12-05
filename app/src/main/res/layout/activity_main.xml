@@ -6,71 +6,90 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_enter"
-        android:layout_width="140dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/rounded_btn"
-        android:text="Enter"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/btn_display"
-        app:layout_constraintStart_toStartOf="@+id/btn_display" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_exit"
-        android:layout_width="140dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/rounded_btn"
-        android:text="Exit"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/btn_display"
-        app:layout_constraintEnd_toEndOf="@+id/btn_display" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_display"
-        android:layout_width="300dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="104dp"
-        android:text="Display the list of interns"
-        android:textColor="@color/white"
-        android:background="@drawable/rounded_btn_01"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_illustration"
-        android:layout_width="254dp"
-        android:layout_height="219dp"
-        android:layout_marginTop="48dp"
-        android:foregroundGravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_logos"
-        app:srcCompat="@drawable/illustration" />
-
-    <ImageView
-        android:id="@+id/iv_logos"
-        android:layout_width="260dp"
-        android:layout_height="91dp"
-        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logos" />
+        tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tv_welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/unbounded"
-        android:gravity="center"
-        android:text="Welcome! Scan your card \nto register and prepare for\n a productive day."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_illustration" />
+        <ImageView
+            android:id="@+id/iv_logos"
+            android:layout_width="match_parent"
+            android:layout_height="91dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="35dp"
+            app:srcCompat="@drawable/logos" />
+
+        <ImageView
+            android:id="@+id/iv_illustration"
+            android:layout_width="match_parent"
+            android:layout_height="219dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="60dp"
+            app:srcCompat="@drawable/illustration" />
+
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/unbounded"
+            android:gravity="center"
+            android:text="Welcome! Scan your card \nto register and prepare for\n a productive day."
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="5dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_enter"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_btn"
+                android:text="Enter"
+                android:textColor="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_exit"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_btn"
+                android:text="Exit"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_display"
+            android:layout_width="300dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_btn_01"
+            android:text="Display the list of interns"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
