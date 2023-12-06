@@ -1,33 +1,26 @@
 package com.example.cimly_mobile_app;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
-
-import android.content.Context;
-import android.content.DialogInterface;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class MainActivity extends AppCompatActivity {
-
     Button btn_enter, btn_exit, btn_display;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Disable Dark mode
+        // Disable Dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -38,6 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Change status bar and navigation bar color and items color
         changeStatusBarColorAndTextColor(getResources().getColor(R.color.status_nav_bar_color));
+
+        btn_display.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     //region Method responsible for changing bars color
@@ -54,3 +55,5 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 }
+
+

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/lighGrey">
+
+    <!-- CardView -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_gravity="center"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="10dp">
+
+        <RelativeLayout
+            android:layout_width="257dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/poppinsbold"
+                android:gravity="center|center_horizontal"
+                android:text="Name" />
+
+            <TextView
+                android:id="@+id/tvarrived"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvname"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:text="Arrived at:     __:__" />
+
+            <TextView
+                android:id="@+id/tvleft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvarrived"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:text="Left at:     __:__" />
+
+            <TextView
+                android:id="@+id/tvid_perso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvleft"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:text="id:00000" />
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- CircleImageView (floating above CardView) -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="right"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="24dp"
+        android:src="@drawable/profiledefault"
+        android:elevation="10dp"/>
+
+
+</FrameLayout>

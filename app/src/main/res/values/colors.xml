@@ -8,4 +8,6 @@
 
     <color name="status_nav_bar_color">#F8F6F6</color>
     <color name="dark_grey">#4A4A4A</color>
+
+    <color name="lighGrey">#F8F6F6</color>
 </resources>

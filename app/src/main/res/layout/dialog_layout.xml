@@ -30,10 +30,11 @@
             android:background="@drawable/rounded_dialog_btn"
             android:text="Yes"
             android:textAllCaps="false"
+            android:fontFamily="@font/poppinssemibold"
             android:textColor="@color/white" />
 
         <Space
-            android:layout_width="20dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -42,6 +43,7 @@
             android:background="@drawable/rounded_dialog_btn"
             android:text="No"
             android:textAllCaps="false"
+            android:fontFamily="@font/poppinssemibold"
             android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>
