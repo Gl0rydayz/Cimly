@@ -7,23 +7,30 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.Space;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-
-    Space spacer01 ;
-    Space spacer02 ;
+    Button btn_display;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Disable Dark mode
+        // Disable Dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
+        btn_display = findViewById(R.id.btn_display);
+        btn_display.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -42,3 +49,5 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
+
+

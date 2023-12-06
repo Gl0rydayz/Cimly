@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+<<<<<<< HEAD
     <bytecodeTargetLevel target="19" />
+=======
+    <bytecodeTargetLevel target="17" />
+>>>>>>> 527d6f374264a9817e02a69d65990c71afca3f23
   </component>
 </project>

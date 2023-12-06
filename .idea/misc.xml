@@ -1,5 +1,6 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+<<<<<<< HEAD
   <component name="ProjectRootManager" version="2" languageLevel="JDK_19" default="true" project-jdk-name="19" project-jdk-type="JavaSDK" />
   <component name="VisualizationToolProject">
     <option name="state">
@@ -8,4 +9,7 @@
       </ProjectState>
     </option>
   </component>
+=======
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK" />
+>>>>>>> 527d6f374264a9817e02a69d65990c71afca3f23
 </project>
