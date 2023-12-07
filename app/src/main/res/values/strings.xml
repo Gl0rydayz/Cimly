@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Cimly-mobile-app</string>
+    
+    <string name="display_name">List of interns</string>
 </resources>
