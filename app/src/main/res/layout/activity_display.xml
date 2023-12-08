@@ -4,12 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DisplayActivity"
-    android:background="@color/lighGrey">
+    android:background="@color/lighGrey"
+    android:orientation="vertical"
+    tools:context=".DisplayActivity">
+
+    <include
+        android:id="@+id/main_toolbar"
+        layout="@layout/main_toolbar" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 </LinearLayout>
