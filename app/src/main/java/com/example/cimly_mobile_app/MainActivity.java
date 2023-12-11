@@ -1,9 +1,11 @@
 package com.example.cimly_mobile_app;
 
-import android.app.AlertDialog;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -20,6 +22,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 public class MainActivity extends AppCompatActivity {
     Button btn_enter, btn_exit, btn_display;
@@ -46,7 +51,41 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btn_enter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scanCode();
+            }
+        });
     }
+
+    //region Scan Qr
+    private void scanCode() {
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Volunm up to flash on");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(CaptureAct.class);
+
+        barLauncher.launch(options);
+    }
+
+    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if (result.getContents() != null) {
+            androidx.appcompat.app.AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Result");
+            builder.setMessage(result.getContents());
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.show();
+        }
+    });
+    //endregion
 
     //region Method responsible for changing bars color
     private void changeStatusBarColorAndTextColor(int color) {
@@ -62,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 
-
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -71,12 +108,29 @@ public class MainActivity extends AppCompatActivity {
         // Check if the orientation has changed
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             setContentView(R.layout.activity_main_land);
-
-
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             setContentView(R.layout.activity_main);
-
         }
+
+        // Reinitialize buttons after changing the layout
+        btn_enter = findViewById(R.id.btn_enter);
+        btn_exit = findViewById(R.id.btn_exit);
+        btn_display = findViewById(R.id.btn_display);
+
+        btn_display.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_enter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scanCode();
+            }
+        });
     }
 
 
