@@ -33,7 +33,7 @@ public class DisplayActivity extends AppCompatActivity {
 
         // Inside DisplayActivity
         ArrayList<Intern> internList = new ArrayList<>();
-        internList.add(new Intern("Mohamed Essebaiy", new Time(9, 5, 0), new Time(16, 5, 0), 1));
+        internList.add(new Intern("Mohamed Essebaiy","ahmadessebaiy@gmail.com","+2126 534 746 88", new Time(9, 5, 0), new Time(16, 5, 0), 1));
 
         listView = findViewById(R.id.listView);
         DisplayAdapter displayAdapter = new DisplayAdapter(getApplicationContext(), internList);

@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lighGrey"
-    android:orientation="vertical"
-    tools:context=".DisplayActivity">
-
+    tools:context=".DisplayActivity"
+    android:background="@color/lightGrey">
     <include
         android:id="@+id/main_toolbar"
         layout="@layout/main_toolbar" />
@@ -16,5 +15,7 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="5dp"/>
+        android:paddingTop="5dp"
+        android:padding="20dp"
+        />
 </LinearLayout>
