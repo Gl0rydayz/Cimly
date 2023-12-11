@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.cimly_mobile_app"
-        minSdk = 26
-        targetSdk = 33
+        minSdk = 15
+        targetSdk = 26
         versionCode = 1
         versionName = "1.0"
 

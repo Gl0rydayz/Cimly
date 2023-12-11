@@ -43,12 +43,16 @@ public class DisplayAdapter extends BaseAdapter {
         TextView tvarrived = view.findViewById(R.id.tvarrived);
         TextView tvleft = view.findViewById(R.id.tvleft);
         TextView tvid = view.findViewById(R.id.tvid_perso);
+        TextView tvemail = view.findViewById(R.id.tvemail);
+        TextView tvnumero = view.findViewById(R.id.tvnum);
         ImageView iv_perso = view.findViewById(R.id.profile_image);
 
         // Get the current Intern at position i
         Intern currentIntern = interns.get(i);
 
         tvname.setText(currentIntern.getName());
+        tvemail.setText(String.format("Email: %s",currentIntern.getEmail()));
+        tvnumero.setText(String.format("Phone Number: %s",currentIntern.getNumero()));
         tvarrived.setText(String.format("Arrived At: %s", currentIntern.getArrivetime().toString()));
         tvleft.setText(String.format("Left At: %s", currentIntern.getLeftime().toString()));
         tvid.setText(String.format("id: %s", currentIntern.getId()));
