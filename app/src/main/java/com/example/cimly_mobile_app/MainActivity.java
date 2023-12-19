@@ -5,9 +5,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.content.Intent;
@@ -19,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -26,8 +31,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import java.lang.ref.WeakReference;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
     Button btn_enter, btn_exit, btn_display;
+    MyDataBase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         btn_exit = findViewById(R.id.btn_exit);
         btn_display = findViewById(R.id.btn_display);
 
+        db = new MyDataBase(this);
         // Change status bar and navigation bar color and items color
         changeStatusBarColorAndTextColor(getResources().getColor(R.color.status_nav_bar_color));
 
@@ -58,12 +70,19 @@ public class MainActivity extends AppCompatActivity {
                 scanCode();
             }
         });
+
+        btn_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scanCodexit();
+            }
+        });
     }
 
     //region Scan Qr
     private void scanCode() {
         ScanOptions options = new ScanOptions();
-        options.setPrompt("Volunm up to flash on");
+        options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
         options.setOrientationLocked(true);
         options.setCaptureActivity(CaptureAct.class);
@@ -73,18 +92,85 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) {
-            androidx.appcompat.app.AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Result");
-            builder.setMessage(result.getContents());
-            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
+            try {
+                String[] parts = result.getContents().split("\n");
+
+                if (parts.length >= 4) {
+                    String name = parts[0];
+                    String email = parts[1];
+                    String numero = parts[2];
+                    String image = parts[3];
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                    String currentTime = sdf.format(new Date());
+                    Time arrivetime = Time.valueOf(currentTime);
+                    Time leftime = Time.valueOf("00:00:00");
+                    Intern intern = new Intern(name, email, numero, image, arrivetime, leftime);
+                    if (db.isInternExist(name)){
+                        db.updateArriveTimeByName(name, String.valueOf(arrivetime), String.valueOf(Time.valueOf("00:00:00")));
+                        Toast.makeText(this,"Arrive Time Updated",Toast.LENGTH_SHORT).show();
+                    }else {
+                    db.insertinterns(intern);
+                    displayInternDialog(intern);
+                    }
+
+                } else {
+                    showErrorDialog("Invalid QR code content");
                 }
-            });
-            builder.show();
+            } catch (Exception e) {
+                showErrorDialog("Error processing QR code content.");
+            }
         }
     });
+
+    private void scanCodexit() {
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Volume up to flash on");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(CaptureAct.class);
+
+        barexitLauncher.launch(options);
+    }
+    ActivityResultLauncher<ScanOptions> barexitLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if (result.getContents() != null) {
+            try {
+                String[] parts = result.getContents().split("\n");
+
+                if (parts.length >= 4) {
+                    String name = parts[0];
+                    if (db.isInternExist(name)){
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                        String currentTime = sdf.format(new Date());
+                        Time leftime = Time.valueOf(currentTime);
+                        db.updateLeaveTimeByName(name, String.valueOf(leftime));
+                        Toast.makeText(this,"Success Update",Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this,"Invalid Update",Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                showErrorDialog("Error processing QR code content.");
+            }
+        }
+    });
+    private void displayInternDialog(Intern intern) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Result");
+        builder.setMessage("WELCOME!  " + intern.getName());
+        builder.setPositiveButton("Ok", (dialogInterface, i) -> dialogInterface.dismiss());
+        builder.show();
+    }
+
+    private void showErrorDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error");
+        builder.setMessage(message);
+        builder.setPositiveButton("Ok", (dialogInterface, i) -> dialogInterface.dismiss());
+        builder.show();
+    }
+
+
     //endregion
 
     //region Method responsible for changing bars color
@@ -131,9 +217,13 @@ public class MainActivity extends AppCompatActivity {
                 scanCode();
             }
         });
+        btn_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            scanCodexit();
+            }
+        });
     }
-
-
 }
 
 
