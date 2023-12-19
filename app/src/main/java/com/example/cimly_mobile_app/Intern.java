@@ -1,19 +1,28 @@
 package com.example.cimly_mobile_app;
 
+import android.util.Base64;
+import android.util.Log;
+
 import java.sql.Time;
 
 public class Intern {
     private String name;
     private String email;
+    private String numero;
 
-    public String getEmail() {
-        return email;
-    }
+
+    private String imageData;
+    private Time arrivetime;
+    private Time leftime;
+    private int id;
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getEmail() {
+        return email;
+    }
     public String getNumero() {
         return numero;
     }
@@ -22,11 +31,12 @@ public class Intern {
         this.numero = numero;
     }
 
-    private String numero;
-    private Time arrivetime;
-    private Time leftime;
-    private int id;
-
+    public String getImageData() {
+        return imageData;
+    }
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
+    }
     public String getName() {
         return name;
     }
@@ -58,13 +68,22 @@ public class Intern {
     public void setId(int id) {
         this.id = id;
     }
+    public String getImageId() {
+        String url = getImageData();
 
-    public Intern(String name,String email,String numero, Time arrivetime, Time leftime, int id) {
+        // Extract ID from the URL
+        String id = url.substring(url.lastIndexOf("=") + 1);
+
+        return id;
+    }
+    public Intern() {
+    }
+    public Intern(String name,String email,String numero,String imageData, Time arrivetime, Time leftime) {
         this.name = name;
         this.email=email;
         this.numero=numero;
+        this.imageData=imageData;
         this.arrivetime = arrivetime;
         this.leftime = leftime;
-        this.id = id;
     }
 }

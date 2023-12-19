@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -18,10 +19,14 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DisplayActivity extends AppCompatActivity {
+    private ArrayList<Intern> internList;
+    private DisplayAdapter displayAdapter;
+    private ListView listView;
 
-    ListView listView;
+    MyDataBase db=new MyDataBase(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +36,19 @@ public class DisplayActivity extends AppCompatActivity {
         // Change status bar and navigation bar color and items color
         changeStatusBarColorAndTextColor(getResources().getColor(R.color.btn_blue));
 
-        // Inside DisplayActivity
-        ArrayList<Intern> internList = new ArrayList<>();
-        internList.add(new Intern("Mohamed Essebaiy","ahmadessebaiy@gmail.com","+2126 534 746 88", new Time(9, 5, 0), new Time(16, 5, 0), 1));
+        // Initialize database
+        MyDataBase db = new MyDataBase(this);
+
+        // Get data from the database
+        List<Intern> interns = db.getAll();
 
         listView = findViewById(R.id.listView);
-        DisplayAdapter displayAdapter = new DisplayAdapter(getApplicationContext(), internList);
-        listView.setAdapter(displayAdapter);
 
+        // Set up the adapter
+        displayAdapter = new DisplayAdapter(getApplicationContext(), R.layout.customlistview, interns);
+
+        // Set the adapter to the ListView
+        listView.setAdapter(displayAdapter);
         // Set up item click listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -52,8 +62,8 @@ public class DisplayActivity extends AppCompatActivity {
         });
 
         setUpToolbar();
-
     }
+
 
     private void showInternDialog(Intern intern) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
