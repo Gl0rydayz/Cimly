@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,7 +81,9 @@ public class DisplayActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setTitle(R.string.display_name);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            toolbar.getNavigationIcon().setTint(getResources().getColor(R.color.lightGrey));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.getNavigationIcon().setTint(getResources().getColor(R.color.lightGrey));
+            }
         }
     }
 
@@ -90,7 +93,9 @@ public class DisplayActivity extends AppCompatActivity {
 
         // Set color for status bar
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.setStatusBarColor(color);
+        }
 
         // Set text color to dark
         View decor = window.getDecorView();
