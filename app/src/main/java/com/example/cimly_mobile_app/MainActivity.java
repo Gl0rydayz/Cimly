@@ -64,25 +64,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_enter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scanCode();
-            }
+        btn_enter.setOnClickListener(v -> {
+            scanCode();
         });
 
-        btn_exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scanCodexit();
-            }
+        btn_exit.setOnClickListener(v -> {
+            scanCodexit();
         });
     }
 
     //region Scan Qr
     private void scanCode() {
         ScanOptions options = new ScanOptions();
-        options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
         options.setOrientationLocked(true);
         options.setCaptureActivity(CaptureAct.class);
@@ -125,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void scanCodexit() {
         ScanOptions options = new ScanOptions();
-        options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
         options.setOrientationLocked(true);
         options.setCaptureActivity(CaptureAct.class);
@@ -169,8 +161,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Ok", (dialogInterface, i) -> dialogInterface.dismiss());
         builder.show();
     }
-
-
     //endregion
 
     //region Method responsible for changing bars color
@@ -187,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 
+    //region Method responsible for handling functions while switching from portrait to landskip or the opposite
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -224,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    //endregion
 }
 
 

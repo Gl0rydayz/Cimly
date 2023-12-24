@@ -110,4 +110,9 @@ public class MyDataBase extends SQLiteOpenHelper {
         db.update(TABLE_INTERNS, values, COLUMN_NAME + "=?", new String[]{name});
 
     }
+
+    public void deleteInternByName(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_INTERNS, COLUMN_NAME + "=?", new String[]{name});
+    }
 }
