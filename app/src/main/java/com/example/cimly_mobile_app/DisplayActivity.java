@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,11 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DisplayActivity extends AppCompatActivity {
-    private ArrayList<Intern> internList;
     private DisplayAdapter displayAdapter;
     private ListView listView;
 
-    MyDataBase db=new MyDataBase(this);
+    MyDataBase db = new MyDataBase(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,9 @@ public class DisplayActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View customDialogView = inflater.inflate(R.layout.dialog_layout, null);
 
+        Button btn_yes = customDialogView.findViewById(R.id.btn_dialogYes);
+        Button btn_no = customDialogView.findViewById(R.id.btn_dialogNo);
+
 
         builder.setView(customDialogView);
 
@@ -79,6 +83,25 @@ public class DisplayActivity extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         dialog.show();
+
+        btn_no.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        btn_yes.setOnClickListener(v -> {
+            // Delete the selected intern from the database
+            db.deleteInternByName(intern.getName());
+
+            // Notify the adapter that the data has changed
+            displayAdapter.notifyDataSetChanged();
+
+            Toast.makeText(this, "Intern removed", Toast.LENGTH_SHORT).show();
+
+            // Dismiss the dialog
+            dialog.dismiss();
+
+            recreate();
+        });
     }
 
 

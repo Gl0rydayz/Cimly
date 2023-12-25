@@ -25,6 +25,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_dialogYes"
             android:layout_width="80dp"
             android:layout_height="35dp"
             android:background="@drawable/rounded_dialog_btn"
@@ -38,6 +39,7 @@
             android:layout_height="match_parent" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_dialogNo"
             android:layout_width="80dp"
             android:layout_height="35dp"
             android:background="@drawable/rounded_dialog_btn"
