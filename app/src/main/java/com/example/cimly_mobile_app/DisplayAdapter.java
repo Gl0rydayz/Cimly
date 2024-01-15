@@ -1,5 +1,6 @@
 package com.example.cimly_mobile_app;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +17,10 @@ import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DisplayAdapter extends ArrayAdapter<Intern> {
@@ -30,6 +34,7 @@ public class DisplayAdapter extends ArrayAdapter<Intern> {
     }
 
 
+    @SuppressLint("ViewHolder")
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
@@ -48,8 +53,10 @@ public class DisplayAdapter extends ArrayAdapter<Intern> {
         tvname.setText(intern.getName());
         tvemail.setText(String.format("Email: %s",intern.getEmail()));
         tvnumero.setText(String.format("Phone Number: %s",intern.getNumero()));
+
         tvarrived.setText(String.format("Arrived At: %s", intern.getArrivetime()));
         tvleft.setText(String.format("Left At: %s", intern.getLeftime()));
+
         tvid.setText(String.format("id: %s", intern.getId()));
         try {
             String encodedId = URLEncoder.encode(imageId, "UTF-8");

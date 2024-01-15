@@ -1,19 +1,26 @@
 package com.example.cimly_mobile_app;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -21,88 +28,68 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DisplayActivity extends AppCompatActivity {
     private DisplayAdapter displayAdapter;
     private ListView listView;
+    private String currentDate;
 
+    private ProgressBar progressBar;
+
+    ImageView calendarIcon ;
+    ImageView noDataIcon;
     MyDataBase db = new MyDataBase(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
 
+
+        currentDate = getCurrentDate();
+        listView = findViewById(R.id.listView);
+        progressBar = findViewById(R.id.circularProgressBar);
+         noDataIcon = findViewById(R.id.noDataIcon);
+         calendarIcon = findViewById(R.id.calendar_icon);
+
+
+
         // Change status bar and navigation bar color and items color
         changeStatusBarColorAndTextColor(getResources().getColor(R.color.btn_blue));
 
-        // Initialize database
-        MyDataBase db = new MyDataBase(this);
-
+        // Show the progress bar while loading data
+        progressBar.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(() -> {
         // Get data from the database
-        List<Intern> interns = db.getAll();
+            List<Intern> interns = db.getAllByCurrentDate(currentDate);
+            displayAdapter = new DisplayAdapter(getApplicationContext(), R.layout.customlistview, interns);
+            listView.setAdapter(displayAdapter);
 
-        listView = findViewById(R.id.listView);
 
-        // Set up the adapter
-        displayAdapter = new DisplayAdapter(getApplicationContext(), R.layout.customlistview, interns);
 
-        // Set the adapter to the ListView
-        listView.setAdapter(displayAdapter);
-        // Set up item click listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the clicked Intern
-                Intern clickedIntern = (Intern) parent.getItemAtPosition(position);
+            if (!interns.isEmpty()){
+            noDataIcon.setVisibility(View.GONE);
 
-                // Show a dialog with information about the clicked intern
-                showInternDialog(clickedIntern);
+            }else {
+            noDataIcon.setVisibility(View.VISIBLE);
+
             }
-        });
+        // Hide the progress bar after loading data
+            progressBar.setVisibility(View.GONE);
+        },2000);
+
 
         setUpToolbar();
     }
 
 
-    private void showInternDialog(Intern intern) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        LayoutInflater inflater = getLayoutInflater();
-        View customDialogView = inflater.inflate(R.layout.dialog_layout, null);
-
-        Button btn_yes = customDialogView.findViewById(R.id.btn_dialogYes);
-        Button btn_no = customDialogView.findViewById(R.id.btn_dialogNo);
-
-
-        builder.setView(customDialogView);
-
-        AlertDialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        dialog.show();
-
-        btn_no.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-
-        btn_yes.setOnClickListener(v -> {
-            // Delete the selected intern from the database
-            db.deleteInternByName(intern.getName());
-
-            // Notify the adapter that the data has changed
-            displayAdapter.notifyDataSetChanged();
-
-            Toast.makeText(this, "Intern removed", Toast.LENGTH_SHORT).show();
-
-            // Dismiss the dialog
-            dialog.dismiss();
-
-            recreate();
-        });
-    }
 
 
     private void setUpToolbar() {
@@ -118,6 +105,86 @@ public class DisplayActivity extends AppCompatActivity {
                 toolbar.getNavigationIcon().setTint(getResources().getColor(R.color.lightGrey));
             }
         }
+
+
+
+
+        calendarIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show the progress bar while loading data
+                //progressBar.setVisibility(View.VISIBLE);
+
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        DisplayActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDayOfMonth) {
+                                String selectedDate = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDayOfMonth;
+
+
+                               if (!selectedDate.equals(currentDate)) {
+                                    // Clear the list view
+                                    displayAdapter.clear();
+                                    displayAdapter.notifyDataSetChanged();
+
+                                    // Update the current date
+                                    currentDate = selectedDate;
+                                }
+
+                                List<Intern> internsForSelectedDate = db.getAllByCurrentDate(selectedDate);
+
+
+
+
+
+
+                                /* Use a handler to delay the loading for demonstration purposes
+                                new Handler().postDelayed(() -> {
+                                    // Get interns for the selected date
+                                    List<Intern> internsForSelectedDate = db.getAllByCurrentDate(selectedDate);
+
+                                    // Check if the list is not empty before clearing the adapter
+                                    if (!internsForSelectedDate.isEmpty()) {
+                                        // Clear and update the adapter with the new list of interns
+                                        displayAdapter.clear();
+                                        displayAdapter.addAll(internsForSelectedDate);
+                                        displayAdapter.notifyDataSetChanged();
+                                        noDataIcon.setVisibility(View.GONE);
+
+
+                                        Toast.makeText(DisplayActivity.this, "Interns for " + selectedDate, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // Optionally, you can show a message indicating no interns for the selected date
+                                        Toast.makeText(DisplayActivity.this, "No interns for selected date", Toast.LENGTH_SHORT).show();
+
+                                        noDataIcon.setVisibility(View.VISIBLE);
+                                    }
+
+                                    // Hide the progress bar after loading data
+                                    progressBar.setVisibility(View.GONE);
+                                }, 2000);*/
+                            }
+                        },
+                        year,
+                        month,
+                        day
+                );
+
+
+                datePickerDialog.show();
+            }
+        });
+    }
+
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(new Date());
     }
 
     //region Method responsible for changing bars color

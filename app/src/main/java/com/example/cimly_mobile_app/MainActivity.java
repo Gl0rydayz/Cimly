@@ -1,6 +1,7 @@
 package com.example.cimly_mobile_app;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -33,8 +34,11 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.lang.ref.WeakReference;
 import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     Button btn_enter, btn_exit, btn_display;
@@ -75,12 +79,15 @@ public class MainActivity extends AppCompatActivity {
 
     //region Scan Qr
     private void scanCode() {
-        ScanOptions options = new ScanOptions();
-        options.setBeepEnabled(true);
-        options.setOrientationLocked(true);
-        options.setCaptureActivity(CaptureAct.class);
 
-        barLauncher.launch(options);
+
+            ScanOptions options = new ScanOptions();
+            options.setBeepEnabled(true);
+            options.setOrientationLocked(true);
+            options.setCaptureActivity(CaptureAct.class);
+
+            barLauncher.launch(options);
+
     }
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
@@ -98,25 +105,45 @@ public class MainActivity extends AppCompatActivity {
                     String currentTime = sdf.format(new Date());
                     Time arrivetime = Time.valueOf(currentTime);
                     Time leftime = Time.valueOf("00:00:00");
-                    Intern intern = new Intern(name, email, numero, image, arrivetime, leftime);
-                    if (db.isInternExist(name)){
-                        db.updateArriveTimeByName(name, String.valueOf(arrivetime), String.valueOf(Time.valueOf("00:00:00")));
-                        Toast.makeText(this,"Arrive Time Updated",Toast.LENGTH_SHORT).show();
-                    }else {
-                    db.insertinterns(intern);
-                    displayInternDialog(intern);
+
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    String currentDate = sdfDate.format(new Date());
+
+                    Date arriveDate = null;
+                    Date leftDate =null;
+                    try {
+                        arriveDate = sdfDate.parse(currentDate);
+                        leftDate = sdfDate.parse(currentDate);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
                     }
+
+                    if (db.hasInternScannedToday(name)){
+                        Toast.makeText(this,"enter already scan today ",Toast.LENGTH_SHORT).show();
+
+                    }else {
+                        Intern intern = new Intern(name, email, numero, image, arrivetime, leftime, arriveDate, leftDate);
+
+                        db.insertinterns(intern);
+                        displayInternDialog(intern);
+                    }
+
+
+
 
                 } else {
                     showErrorDialog("Invalid QR code content");
                 }
             } catch (Exception e) {
-                showErrorDialog("Error processing QR code content.");
+                showErrorDialog("Error processing QR code content: " + e.getMessage());
             }
         }
+
     });
 
+
     private void scanCodexit() {
+        // User has not scanned for exit today, proceed with scanning
         ScanOptions options = new ScanOptions();
         options.setBeepEnabled(true);
         options.setOrientationLocked(true);
@@ -124,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
 
         barexitLauncher.launch(options);
     }
+
+
+
     ActivityResultLauncher<ScanOptions> barexitLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) {
             try {
@@ -131,21 +161,46 @@ public class MainActivity extends AppCompatActivity {
 
                 if (parts.length >= 4) {
                     String name = parts[0];
-                    if (db.isInternExist(name)){
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                        String currentTime = sdf.format(new Date());
-                        Time leftime = Time.valueOf(currentTime);
-                        db.updateLeaveTimeByName(name, String.valueOf(leftime));
-                        Toast.makeText(this,"Success Update",Toast.LENGTH_SHORT).show();
+
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                    String currentTime = sdf.format(new Date());
+                    Time leftime = Time.valueOf(currentTime);
+
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    String currentDate = sdfDate.format(new Date());
+                    Date leftDate = null;
+                    try {
+                        leftDate = sdfDate.parse(currentDate);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
                     }
+
+                    if (db.hasInternExitToday(name)){
+                        db.updateLeaveTimeByName(name,leftime,leftDate);
+                        Toast.makeText(this, "Success Update", Toast.LENGTH_SHORT).show();
+                    }else if (!db.hasInternScannedToday(name)){
+                        Toast.makeText(this, "no enter with that name : "+ name, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(this, "Time already Updated", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
                 } else {
                     Toast.makeText(this,"Invalid Update",Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 showErrorDialog("Error processing QR code content.");
+
             }
         }
     });
+
+
+
+
+
     private void displayInternDialog(Intern intern) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Result");
@@ -202,6 +257,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
         btn_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -217,5 +276,6 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 }
+
 
 
