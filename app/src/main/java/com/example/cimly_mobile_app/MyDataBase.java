@@ -115,4 +115,31 @@ public class MyDataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_INTERNS, COLUMN_NAME + "=?", new String[]{name});
     }
+
+    @SuppressLint("Range")
+    public ArrayList<Intern> search(String search) {
+        ArrayList<Intern> searchResults = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the search query
+        String selectQuery = "SELECT * FROM " + TABLE_INTERNS + " WHERE " + COLUMN_NAME + " LIKE '%"
+                + search + "%' OR " + COLUMN_EMAIL + " LIKE '%" + search + "%' OR " + COLUMN_NUMERO + " LIKE '%" + search + "%'";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Intern intern = new Intern();
+                intern.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                intern.setName(cursor.getString(cursor.getColumnIndex("name")));
+                intern.setEmail(cursor.getString(cursor.getColumnIndex("email")));
+                intern.setNumero(cursor.getString(cursor.getColumnIndex("numero")));
+                searchResults.add(intern);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return searchResults;
+    }
 }

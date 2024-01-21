@@ -71,11 +71,18 @@ public class Intern {
     public String getImageId() {
         String url = getImageData();
 
-        // Extract ID from the URL
-        String id = url.substring(url.lastIndexOf("=") + 1);
+        // Add a null check for imageData
+        if (url != null) {
+            // Extract ID from the URL
+            int lastIndex = url.lastIndexOf("=");
+            if (lastIndex != -1) {
+                return url.substring(lastIndex + 1);
+            }
+        }
 
-        return id;
+        return ""; // or handle the case when imageData is null or does not contain "="
     }
+
     public Intern() {
     }
     public Intern(String name,String email,String numero,String imageData, Time arrivetime, Time leftime) {
