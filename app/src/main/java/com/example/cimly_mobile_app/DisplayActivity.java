@@ -13,10 +13,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,11 +34,11 @@ public class DisplayActivity extends AppCompatActivity {
     private ListView listView;
     private ProgressBar progressBar;
 
-    ImageView noDataIcon;
-    ImageView searchIcon ;
-    ImageView closeIcon;
+    ImageView noDataIcon,searchIcon,closeIcon;
+    TextView personCount;
     MyDataBase db = new MyDataBase(this);
     private boolean isSearchVisible = false;
+    int count=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,9 @@ public class DisplayActivity extends AppCompatActivity {
         noDataIcon = findViewById(R.id.noDataIcon);
         searchIcon = findViewById(R.id.search_icon);
         closeIcon = findViewById(R.id.close_icon);
+        personCount = findViewById(R.id.count_person);
+
+        updatePersonCount();
 
         // Change status bar and navigation bar color and items color
         changeStatusBarColorAndTextColor(getResources().getColor(R.color.btn_blue));
@@ -104,6 +109,7 @@ public class DisplayActivity extends AppCompatActivity {
             displayAdapter = new DisplayAdapter(getApplicationContext(), R.layout.customlistview, interns);
             listView.setAdapter(displayAdapter);
 
+
             // Set up item click listener
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -131,6 +137,13 @@ public class DisplayActivity extends AppCompatActivity {
         setUpToolbar();
     }
 
+    private void updatePersonCount() {
+        // Update the count
+        count = db.getAll().size();
+
+        // Update the person count in UI
+        personCount.setText(String.valueOf(count));
+    }
     private void updateUI() {
         if (isSearchVisible) {
             // Show the search view
@@ -180,16 +193,26 @@ public class DisplayActivity extends AppCompatActivity {
             // Delete the selected intern from the database
             db.deleteInternByName(intern.getName());
 
-            // Notify the adapter that the data has changed
-            displayAdapter.notifyDataSetChanged();
-
             Toast.makeText(this, "Intern removed", Toast.LENGTH_SHORT).show();
 
             // Dismiss the dialog
             dialog.dismiss();
 
-            recreate();
+            updatePersonCount();
+
+            List<Intern> interns = db.getAll();
+            displayAdapter = new DisplayAdapter(getApplicationContext(), R.layout.customlistview, interns);
+            listView.setAdapter(displayAdapter);
+            if (!interns.isEmpty()){
+                noDataIcon.setVisibility(View.GONE);
+
+            }else {
+                noDataIcon.setVisibility(View.VISIBLE);
+
+            }
+
         });
+
     }
 
 

@@ -19,6 +19,24 @@
         android:layout_marginEnd="20dp"
         android:layout_gravity="end"/>
 
+    <TextView
+        android:id="@+id/count_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/white"
+        android:layout_gravity="end"
+        />
+
+    <ImageView
+        android:id="@+id/person_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_person_24"
+        android:layout_gravity="end"/>
+
+
     <ImageView
         android:id="@+id/close_icon"
         android:layout_width="wrap_content"
@@ -42,5 +60,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
+
 
 </androidx.appcompat.widget.Toolbar>
